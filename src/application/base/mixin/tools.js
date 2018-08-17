@@ -1,4 +1,5 @@
 import deepClone from '@/utils/clone.js'
+import {FORMMODELCONFIG} from '@/api'
 
 export default {
   methods: {
@@ -29,6 +30,15 @@ export default {
         width: '50%',
         isShowMask: true
       })
+    },
+    getFDConfig () {
+      // this.axios.post(FORMMODELCONFIG).then(({data}) => {
+      //   console.log('data')
+      //   this.$store.commit('getFormModelConfig', data.value)
+      // })
     }
+  },
+  mounted () {
+    this.getFDConfig()
   }
 }

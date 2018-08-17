@@ -4,7 +4,7 @@ import * as types from './mutation-types'
 import axios from 'axios'
 import moduleA from './modules/moduleA'
 import moduleB from './modules/moduleB'
-
+import formModel from './modules/formModel'
 import { formModels } from './formModels'
 import { Func1 } from './validators'
 
@@ -117,6 +117,9 @@ const store = new Vuex.Store({
     dataUpdated ({commit}, v) {
       commit('dataUpdated', v);
     }
+  },
+  modules: {
+    formModel
   }
 })
 

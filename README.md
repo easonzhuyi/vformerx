@@ -1,7 +1,8 @@
 # vsiren-cli
 > A Vue.js project Multiple Entry
 
-# 目录结构说明
+## 目录结构说明
+
 - 路由按目录划分，即每个页面对应一个文件夹，每个文件夹包含 index.js,
   main.vue。具体请参考demo
 - 路由名称和文件夹保持一致(重要)
@@ -38,7 +39,8 @@ npm run mdev
 npm test
 ```
 
-# API MOCK
+## API MOCK
+
 API : src/api/index.js
 
 ``` bash
@@ -59,19 +61,20 @@ example
 var crosshost = 'https://easy-mock.com'
 
 ```
-# multiple Entry
-config  ./config/entry.json
 
-``` bash
-Entry url: http://localhost:9100/share.html#/
+## formModel返回数据说明
 
-'/share/*': {
-  必须把scheme 添加上，并在尾部附加上一个'/'才可行
-  target: `http://localhost:9100/`,
-  pathRewrite: {
-    '^\/share(\/[a-zA-Z]+)?': '/share.html'
-  }
-}
-```
-
+| 类型            | 返回值 | 备注       |
+| --------------- | ------ | ---------- |
+| za-select       | String |            |
+| za-input        | String |            |
+| za-button_group | String |            |
+| hidden          | String |            |
+| za-text         | String | 值无法修改 |
+| za-address      | Object |            |
+| za-date         | String |            |
+| za-sex          | String |            |
+| za-yesno        | String |            |
+| za-textarea     | String |            |
+| Title           |        | 无返回值   |
 

@@ -15,7 +15,7 @@ import {translationsFan, translationsEn} from '@/language'
 import { AlertPlugin, ConfirmPlugin, ToastPlugin, LoadingPlugin } from 'vformer'
 import baseMixin from '../base/mixin'
 import '@/widget/filter'
-
+import getConfig from './getConfig'
 Vue.use(AlertPlugin)
 Vue.use(ConfirmPlugin)
 Vue.use(ToastPlugin)
@@ -52,5 +52,6 @@ let app = new Vue({
 })
 
 axioshttp(app)
+getConfig(app)
 window.app = app
 export default app
