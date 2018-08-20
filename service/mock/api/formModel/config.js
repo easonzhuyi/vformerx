@@ -26,8 +26,8 @@ const defaultOccupation = {
   }
 }
 const data = {
-  p1: {
-    form1: {
+  page1: {
+    f1: {
       name: {
         value: '',
         rules: {
@@ -36,19 +36,7 @@ const data = {
           vRules: 'required|username|usernameLength',
           placeholder: '请输入姓名',
           errorMsg: '请输入姓名'
-        },
-        validators: [
-            {
-              name: '验证父母年龄',
-              fields: ['p2-form1-tax'],
-              codes: `
-              if ($$.number(0) > $$.number(1)) {
-                  return $$.pass()
-              } else {
-                  return $$.fail(0, '父母的年龄小于子女的年龄') 
-              }`
-            }
-        ]
+        }
       },
       address : {
         value: {
@@ -92,7 +80,7 @@ const data = {
         }
       }
     },
-    form2: {// 被保人信息
+    f2: {// 被保人信息
       relation: {
         value: '',
         rules: {
@@ -138,7 +126,7 @@ const data = {
         }
       },
     },
-    form3: {// 添加的被保人信息
+    f3: {// 添加的被保人信息
       genderCode: {
         value: 'F',
         rules: {
