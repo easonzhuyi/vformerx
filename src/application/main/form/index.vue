@@ -1,64 +1,65 @@
 <template>
   <div>
     <tab>
-      <tab-item selected @on-item-click="onItemClick">表1</tab-item>
-      <tab-item @on-item-click="onItemClick">表2</tab-item>
-      <tab-item @on-item-click="onItemClick">表3</tab-item>
+      <tab-item selected @on-item-click="pageName = 'p1'">已发货</tab-item>
+      <tab-item @on-item-click="pageName = 'p2'">未发货</tab-item>
+      <tab-item @on-item-click="pageName = 'p3'">全部订单</tab-item>
     </tab>
-    <form-unit name='page1.f1' v-show='tabIndex == 0' 
-    :formModels='formModels.f1' 
-    @formChange="formDataChange" 
-    @formEvent='formEvent' ></form-unit>
-    <form-unit v-show='tabIndex == 1' 
-    name='page1.f2'
-    :formModels='formModels.f2' 
-    @formChange="formDataChange"
-     ></form-unit>
-    <form-unit v-show='tabIndex == 2' 
-    :formModels='formModels.f3' 
-     ></form-unit>
-    <p>info: {{$store.state.formModel.config.page1.f2}}</p>
+    <form-unit v-for="(formModel, key) in formModels" :key="key" :name="pageName + '-' + key" :formModels="formModel" @formChange="onChange" @formEvent="onEvent">
+    </form-unit>
+    <button @click="onAddBtnClicked">ADD</button>
   </div>
 </template>
 <script>
-import {formUnit, Tab, TabItem} from 'vformer'
-import { setTimeout } from 'timers'
+import { ARTICLELIST } from "@/api"
+import * as types from "@/store/mutation-types"
+import { formUnit, Tab, TabItem } from "vformer"
 export default {
   data () {
     return {
-      formModels: this.$store.state.formModel.config.page1,
-      tabIndex: 0
-    }
+      pageName: 'p1'
+    };
+  },
+  components: {
+    formUnit, Tab, TabItem
   },
   methods: {
-    formEvent (t, e) {},
-    formDataChange (v) {
-      this.$store.dispatch('setConfig', v)
+    onChange (v) {
+      // console.log('数据', v.msg)
+      
+      this.$store.dispatch('dataUpdated', v);
     },
-    getConfig () {
-      this.formModels = this.$store.state.formModel.config.page1
-      console.log('==>', this.formModels)
+    onItemClick () {
+
     },
-    onItemClick (e) {
-      console.log(e)
-      this.tabIndex = e
+    onEvent (t, v) {
+      console.log('事件', t, v);
+      this.$store.dispatch('eventUpdated', v);
+      
+    },
+    render () {},
+    onAddBtnClicked () {
+      this.$store.dispatch('insert');
     }
   },
   computed: {
-    isSelf () {
-      return this.formModels
+    formModels () {
+      // console.log('当前表单配置', this.$store.state.formModels[this.pageName])
+      return this.$store.state.formModels[this.pageName]
+    },
+    count () {
+      return this.$store.state.count
+    },
+    countPlus () {
+      return this.$store.getters.countPlus
     }
   },
   created () {
-    // this.getConfig()
-  },
-  mounted () {
-    // this.getConfig()
-  },
-  components: {
-    formUnit,
-    TabItem,
-    Tab
+    this.render();
   }
-}
+};
 </script>
+
+<style lang="less" scoped>
+
+</style>

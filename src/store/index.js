@@ -1,118 +1,71 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as types from './mutation-types'
-import axios from 'axios'
-import moduleA from './modules/moduleA'
-import moduleB from './modules/moduleB'
 import formModel from './modules/formModel'
-import { formModels } from './formModels'
-import { Func1 } from './validators'
+import { formModels as config } from './formModels'
 
-// import ui from './modules/ui'
-// import { resolve } from 'url';
+
+import * as assistant from '../assistant'
+
 
 Vue.use(Vuex)
 
-function getData () {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve()
-    }, 1000)
-  })
-}
-
-
-function validate (callback, formValues, fieldValue, ...field) {
-  function $$ (col) {
-    function getFieldValue (col) {
-      if (field.length > col) {
-        return formValues[field[col]]
-      } else {
-        return undefined
-      }
-    }
-
-    return col === 0 ? fieldValue : getFieldValue(col - 1);
-  }
-
-  for (let i = 0; i <= field.length; i++) {
-    if (typeof $$(i) === 'undefined') {
-      return {
-        pass: true,
-        ignore: true
-      }
-    }
-  }
-
-  $$.number = function (col) {
-    return parseInt($$(col))
-  }
-
-  $$.fail = function (col, reason) {
-    return {
-      pass: false,
-      field: field[col],
-      reason: reason
-    }
-  }
-
-  $$.pass = function () {
-    return {
-      pass: true
-    }
-  }
-
-  return callback($$);
-}
-
-function mapFields (state, callback) {
-  let models = state.formModels;
-  for (let mKey in models) {
-    for (let pKey in models[mKey]) {
-      for (let fKey in models[mKey][pKey]) {
-        callback(models[mKey][pKey][fKey]);
-      }
-    }
-  }
-}
+// 根据配置文件，创建规则依赖表
+// let dep = assistant.findDependencies(config.formModels)
+// config.dependencies = dep
 
 const store = new Vuex.Store({
   state: {
-    formModels: formModels,
+    config: {},
     formValues: {}
   },
 
   mutations: {
-    dataUpdated (state, v) {
-      console.log(v);
-      for (let key in v.value) {
-        state.formValues[`${v.name}-${key}`] = v.value[key];
+    getFormModelConfig: (state, config) => {
+      let dep = assistant.findDependencies(config.formModels)
+      config.dependencies = dep
+      // console.log(config.dependencies);
+      state.config = config
+    },
+    dataUpdated (state, obj) {
+      let data = obj.v;
+      let page = obj.page;
+      let name = obj.t;
 
-        let sections = v.name.split('-');
-        let field = state.formModels[sections[0]][sections[1]][key];
-        field.value = v.value[key];
+      if (JSON.stringify(data.value) === '{}') {
+          return;
+
       }
 
-      mapFields(state, field => {
-        let validators = field.validators;
-        validators && validators.forEach((item) => {
-          let callback = eval(`$$ => {${item.codes}}`);
-          let ret = validate(callback, state.formValues, field.value, ...item.fields);
-          console.log(ret);
-        })
-      })
+      assistant.save(state, page, data)
 
-      console.log(state.formValues);
+      assistant.validate(state, {
+          page: page,
+          form: data.name,
+          name: name
+      })
     },
-    insert (state) {
-      console.log('insert');
-      let j = JSON.stringify(state.formModels['p1']['form1']);
-      Vue.set(state.formModels.p1, 'form11', JSON.parse(j));
+
+    insert (state, {p,f}) {
+      let j = JSON.stringify(state.config.formModels[p][f]);
+      let insertF = ''
+      let templateFs = Object.keys(state.config.formModels[p]).filter( v =>  v.includes(f))
+      let i = 1
+      templateFs.forEach( v => {
+        if(v === f + i) {
+          i++
+        }
+        insertF = f + i
+      })
+      Vue.set(state.config.formModels.p1, insertF, JSON.parse(j));
+
+      assistant.updateDependencies(state.config.dependencies, state.config.formModels, p, insertF);
+      // console.log('updateDependencies');
+      console.log(state.config.dependencies)
     }
   },
   actions: {
-    insert ({ commit }) {
-      commit('insert');
+    insert ({ commit },obj) {
+      commit('insert',obj);
     },
     dataUpdated ({commit}, v) {
       commit('dataUpdated', v);
