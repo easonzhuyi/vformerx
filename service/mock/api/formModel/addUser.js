@@ -387,6 +387,48 @@ const formModels = {
 						}
 					],
 				},
+				cardType: {
+					value: '',
+					rules: {
+						label: '证件类型',
+						type: 'za-select',
+						showName:true,
+						readOnly: false,
+						vRules: 'required',
+						placeholder: '请选择证件类型',
+						options: [[
+								{
+									"value": "01",
+									"name": "身份证"
+								},
+								{
+									"value": "02",
+									"name": "护照"
+								},
+							]],
+						errorMsg: '请选择证件类型'
+					}
+				},
+				idCard: {
+					value: '',
+					rules: {
+						label: '证件号码',
+						type: 'za-input',
+						vRules: 'required|idcard',
+						placeholder: '请输入身份证号码',
+						errorMsg: '请输入身份证号码'
+					}
+				},
+				ppCard: {
+					value: '',
+					rules: {
+						label: '护照',
+						type: 'hidden',
+						vRules: 'required|passport',
+						placeholder: '请输入护照号码',
+						errorMsg: '请输入护照号码'
+					}
+				},
 			},
 			form2: {
 				relation: {
@@ -432,11 +474,6 @@ const formModels = {
 									return $$.pass()
 								}
 							`
-						},
-						{
-							name: 'name',
-							fields: ['p1-form1-name'],
-							template: 'Null'
 						},
 						{
 							name: 'name',

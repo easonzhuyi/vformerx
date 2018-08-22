@@ -48,6 +48,8 @@ export default {
   },
   methods: {
     onChange (v, t) {
+      // console.log(v, t);
+      
       this.$store.dispatch('dataUpdated', {v, t, page: this.pageName});
     },
     insertUser() {
@@ -63,7 +65,37 @@ export default {
       //this.$store.dispatch('resetEventUpdated');
     },
     onEvent (t, v) {
-      //this.$store.dispatch('eventUpdated', {t, v});
+      const showObj = {
+        name: '',
+        val:''
+      }
+      const hiddenObj = {
+        name: '',
+        val:''
+      }
+      if(v.name === 'cardType') {
+        if(v.value[0] === '01') {
+          showObj.name = 'idCard'
+          showObj.val = 'za-input'
+          hiddenObj.name = 'ppCard'
+          hiddenObj.val = 'hidden'
+        }else {
+          showObj.name = 'ppCard'
+          showObj.val = 'za-input'
+          hiddenObj.name = 'idCard'
+          hiddenObj.val = 'hidden'
+        }
+      }
+      this.$store.commit('changeFormType',{
+        p: 'p1',
+        f: 'form1',
+        obj: showObj
+      })
+      this.$store.commit('changeFormType',{
+        p: 'p1',
+        f: 'form1',
+        obj: hiddenObj
+      })
     },
     renderCopyForm () {
       this.copyFormModels = Object.keys(this.$store.state.config.formModels[this.pageName]).filter( v => v.includes('form2'))

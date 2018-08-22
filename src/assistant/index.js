@@ -54,7 +54,8 @@ function validateField (callback, formValues, thisField, info, ...field) {
             pass: true
         }
     }
-      
+    // console.log('callback',callback);
+    
     return callback($$);
 }
 
@@ -65,14 +66,17 @@ function executeValidator(state, validators, fieldObj, field, templates) {
 
     validators.forEach(v => {
         let codes = v.template ? `$$ => {${templates[v.template]}}` : `$$ => {${v.codes}}`
-        let callback = eval(codes)
-        let result = validateField(callback, state.formValues, fieldObj, field, ...v.fields)
+        let callback = evilEval(codes)
+        // let callback = eval(codes)
+        let result = validateField(callback(), state.formValues, fieldObj, field, ...v.fields)
         console.log(result);
         
     })
 }
 
-
+function evilEval(str) {
+    return new Function(`return ${str}`)
+}
 function map(models, callback) {
     let obj = {};
 

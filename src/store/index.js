@@ -60,7 +60,14 @@ const store = new Vuex.Store({
 
       assistant.updateDependencies(state.config.dependencies, state.config.formModels, p, insertF);
       // console.log('updateDependencies');
-      console.log(state.config.dependencies)
+      // console.log(state.config.dependencies)
+    },
+
+    changeFormType(state,{p,f,obj}) {
+      // console.log(p,f,obj)
+      console.log(state.config.formModels[p][f][obj.name].rules);
+      
+      state.config.formModels[p][f][obj.name].rules.type = obj.val
     }
   },
   actions: {
