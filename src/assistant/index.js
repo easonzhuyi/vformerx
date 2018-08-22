@@ -67,7 +67,7 @@ function executeValidator(state, validators, fieldObj, field, templates) {
         let codes = v.template ? `$$ => {${templates[v.template]}}` : `$$ => {${v.codes}}`
         let callback = eval(codes)
         let result = validateField(callback, state.formValues, fieldObj, field, ...v.fields)
-        console.log(result);
+        // console.log(result);
         
     })
 }
