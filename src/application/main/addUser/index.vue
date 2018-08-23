@@ -123,31 +123,42 @@ export default {
 
 <style lang="less" scoped>
 .btn-container {
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  background-color: #ffffff;
-  padding-top: 30px;
-  padding-bottom: 30px;
-  margin-top: 15px;
-  margin-bottom: 60px;
-  .add {
-    color: #5697ff;
-    font-size: 17px;
-    background-color: #ffffff;
-    text-align: center;
-    display: block;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    border: 1px solid #ffffff;
-    .icon-add-blue {
-      margin-right: 2px;
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      background-color: #ffffff;
+      padding-top: 30px;
+      padding-bottom: 30px;
+      margin-top: 15px;
+      margin-bottom: 60px;
+      .btn-add {
+        color: #5697ff;
+        font-size: 17px;
+        background-color: #ffffff;
+        text-align: center;
+        display: block;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        border: 1px solid #ffffff;
+        .icon-add-blue {
+          margin-right: 2px;
+        }
+      }
+      .vertivalm{
+        vertical-align: middle;
+      }
+      .add{
+        width: 48%;
+        border: 1px solid #5697ff;
+        background-color: #ffffff;
+        color: #5697ff;
+        font-size: 16px;
+        border-radius: 8px;
+        padding: 10px 0;
+      }
     }
-
-  }
-}
-//下一步按鈕样式
-.btn-next{
+    //下一步按鈕样式
+    .btn-next{
       display: block;
       position: fixed;
       bottom: 0;
