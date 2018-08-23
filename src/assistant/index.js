@@ -137,10 +137,7 @@ function executeLocalJob(job) {
  */
 function executeRemoteJob(job, callback) {
     if (job.length === 0) {
-        callback({
-            pass: true,
-            ignore: true
-        })
+        callback({pass: true});
     } else {
         settings.vux.loading.show({
             text: '正在验证'

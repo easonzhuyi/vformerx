@@ -479,7 +479,13 @@ const formModels = {
 							name: 'name',
 							fields: ['p1-form1-name'],
 							template: 'NotNull'
-						},
+                        },
+                        {
+                            name: 'async',
+                            fields: ['relation'],
+                            template: 'ServerEquals',
+                            server: true
+                        }
 					],
 				},
 				genderCode: {
