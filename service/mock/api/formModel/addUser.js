@@ -1,9 +1,9 @@
 const wrapper = function (value) {
-	return {
-		success: true,
-		errorMsg: '',
-		value
-	}
+    return {
+        success: true,
+        errorMsg: '',
+        value
+    }
 }
 
 const formModels = {
@@ -479,7 +479,13 @@ const formModels = {
 							name: 'name',
 							fields: ['p1-form1-name'],
 							template: 'NotNull'
-						},
+                        },
+                        {
+                            name: 'async',
+                            fields: ['relation'],
+                            template: 'ServerEquals',
+                            server: true
+                        }
 					],
 				},
 				genderCode: {

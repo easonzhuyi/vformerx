@@ -1,86 +1,84 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import formModel from './modules/formModel'
-import { formModels as config } from './formModels'
-
-
+import { debounce } from 'lodash'
 import * as assistant from '../assistant'
 
 
 Vue.use(Vuex)
 
-// 根据配置文件，创建规则依赖表
-// let dep = assistant.findDependencies(config.formModels)
-// config.dependencies = dep
+const validate = debounce(({ state, commit, data, page, field }) => {
+    assistant.bind(state.config.formModels, data, page);
+    assistant.validate(state.config.formModels, {
+        page: page,
+        form: data.name,
+        name: field
+    }).then(result => {
+        if (result.pass) {
+            commit('update', { data, result })
+        } else {
+            commit('error', result)
+        }
+    })
+}, 500)
 
 const store = new Vuex.Store({
-  state: {
-    config: {},
-    formValues: {}
-  },
-
-  mutations: {
-    getFormModelConfig: (state, config) => {
-      let dep = assistant.findDependencies(config.formModels)
-      config.dependencies = dep
-      // console.log(config.dependencies);
-      state.config = config
-    },
-    dataUpdated (state, obj) {
-      let data = obj.v;
-      let page = obj.page;
-      let name = obj.t;
-
-      if (JSON.stringify(data.value) === '{}') {
-          return;
-
-      }
-
-      assistant.save(state, page, data)
-
-      assistant.validate(state, {
-          page: page,
-          form: data.name,
-          name: name
-      })
+    state: {
+        config: {}
     },
 
-    insert (state, {p,f}) {
-      let j = JSON.stringify(state.config.formModels[p][f]);
-      let insertF = ''
-      let templateFs = Object.keys(state.config.formModels[p]).filter( v =>  v.includes(f))
-      let i = 1
-      templateFs.forEach( v => {
-        if(v === f + i) {
-          i++
+    mutations: {
+        initialize(state, config) {
+            state.config = config;
+        },
+
+        update(state, { data, result }) {
+            console.log(result);
+        },
+
+        error(state, error) {
+            console.log(error);
+        },
+
+        insert(state, { form, body }) {
+            Vue.set(state.config.formModels.p1, form, JSON.parse(body));
         }
-        insertF = f + i
-      })
-      Vue.set(state.config.formModels.p1, insertF, JSON.parse(j));
-
-      assistant.updateDependencies(state.config.dependencies, state.config.formModels, p, insertF);
-      // console.log('updateDependencies');
-      // console.log(state.config.dependencies)
     },
+    actions: {
+        insert({ commit, state }, { page, form }) {
+            let body = JSON.stringify(state.config.formModels[page][form]);
+            let newFormName = ''
+            let forms = Object.keys(state.config.formModels[page]).filter(v => v.includes(form))
+            let i = 1
 
-    changeFormType(state,{p,f,obj}) {
-      // console.log(p,f,obj)
-      console.log(state.config.formModels[p][f][obj.name].rules);
-      
-      state.config.formModels[p][f][obj.name].rules.type = obj.val
-    }
-  },
-  actions: {
-    insert ({ commit },obj) {
-      commit('insert',obj);
+            forms.forEach(v => {
+                if (v === form + i) {
+                    i++
+                }
+                newFormName = form + i
+            })
+
+            commit('insert', { form: newFormName, body });
+            assistant.update(state.config.formModels, page, newFormName);
+        },
+
+        initialize({ commit }, { config, vux }) {
+            commit('initialize', config);
+            assistant.initialize(config.formModels, config.templates, vux);
+        },
+
+        update({ commit, state }, { data, page, field }) {
+            validate({ state, commit, data, page, field });
+        },
+
+        changeFormType(state,{p,f,obj}) {
+            console.log(state.config.formModels[p][f][obj.name].rules);
+            state.config.formModels[p][f][obj.name].rules.type = obj.val
+        }
     },
-    dataUpdated ({commit}, v) {
-      commit('dataUpdated', v);
+    modules: {
+        formModel
     }
-  },
-  modules: {
-    formModel
-  }
 })
 
 export default store

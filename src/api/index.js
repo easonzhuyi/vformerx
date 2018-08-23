@@ -45,3 +45,5 @@ export const IDEMO = path('/demo', true)
 export const ARTICLELIST = path('/article/list', true)
 export const FORMMODELCONFIG = path('/formModel/mock', true)
 export const ADDUSER = path('/formModel/addUser', true)
+
+export const V_FORMER_SERVER = path('/formModel/validate', true)
