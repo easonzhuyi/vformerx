@@ -23,6 +23,13 @@
     <!-- <p v-for="(v,i) in copyFormModels" :key='i'>
       {{v}}
     </p> -->
+
+    <za-title className="main-title" name="applicanttitle">
+      投保人demo
+    </za-title>
+    <form-unit name='form3' :formModels="formModels['form3']" @formChange="onChange" @formEvent="onEvent">
+
+    </form-unit>
     <div class="btn-container" @click='insertUser'>
       <div  class="weui-btn add">
         <span class="icon-add-blue"></span>
