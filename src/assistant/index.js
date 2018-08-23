@@ -114,12 +114,13 @@ function executeLocalJob(job) {
     $$.fail = function (column, reason) {
         return {
             pass: false,
-            reason: reason
+            reason: 'error_msg'
         }
     }
     $$.stamp = function (column) {
         return parseInt(Date.parse($$(column)))
     }
+
     $$.pass = function () {
         return {
             pass: true

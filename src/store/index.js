@@ -71,6 +71,10 @@ const store = new Vuex.Store({
             validate({ state, commit, data, page, field });
         },
 
+        changeFormType(state,{p,f,obj}) {
+            console.log(state.config.formModels[p][f][obj.name].rules);
+            state.config.formModels[p][f][obj.name].rules.type = obj.val
+        }
     },
     modules: {
         formModel

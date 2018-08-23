@@ -29,7 +29,7 @@
           <span class="vertivalm">添加被保人</span>
       </div>
     </div>
-    <!-- <button @click="onAddBtnClicked">ADD</button> -->
+    <div class="btn-next">下一步</div>
   </div>
 </template>
 <script>
@@ -65,8 +65,38 @@ export default {
     onItemClick(name) {
       this.pageName = name;
     },
-    onEvent(t, v) {
-      //this.$store.dispatch('eventUpdated', {t, v});
+    onEvent (t, v) {
+      const showObj = {
+        name: '',
+        val:''
+      }
+      const hiddenObj = {
+        name: '',
+        val:''
+      }
+      if(v.name === 'cardType') {
+        if(v.value[0] === '01') {
+          showObj.name = 'idCard'
+          showObj.val = 'za-input'
+          hiddenObj.name = 'ppCard'
+          hiddenObj.val = 'hidden'
+        }else {
+          showObj.name = 'ppCard'
+          showObj.val = 'za-input'
+          hiddenObj.name = 'idCard'
+          hiddenObj.val = 'hidden'
+        }
+      }
+      this.$store.commit('changeFormType',{
+        p: 'p1',
+        f: 'form1',
+        obj: showObj
+      })
+      this.$store.commit('changeFormType',{
+        p: 'p1',
+        f: 'form1',
+        obj: hiddenObj
+      })
     },
     renderCopyForm() {
       this.copyFormModels = Object.keys(
@@ -101,7 +131,7 @@ export default {
   padding-bottom: 30px;
   margin-top: 15px;
   margin-bottom: 60px;
-  .btn-add {
+  .add {
     color: #5697ff;
     font-size: 17px;
     background-color: #ffffff;
@@ -113,18 +143,25 @@ export default {
     .icon-add-blue {
       margin-right: 2px;
     }
-  }
-  .vertivalm {
-    vertical-align: middle;
-  }
-  .add {
-    width: 48%;
-    border: 1px solid #5697ff;
-    background-color: #ffffff;
-    color: #5697ff;
-    font-size: 16px;
-    border-radius: 8px;
-    padding: 10px 0;
+
   }
 }
+//下一步按鈕样式
+.btn-next{
+      display: block;
+      position: fixed;
+      bottom: 0;
+      left:0;
+      width:100%;
+      height:45px;
+      line-height: 45px;
+      color: #fff;
+      text-align: center;
+      font-size: 17px;
+      z-index: 400;
+      background: -webkit-linear-gradient(left, #67a4ff, #0062e8); /* Safari 5.1 - 6.0 */
+      background: -o-linear-gradient(right, #67a4ff, #0062e8); /* Opera 11.1 - 12.0 */
+      background: -moz-linear-gradient(right, #67a4ff, #0062e8); /* Firefox 3.6 - 15 */
+      background: linear-gradient(to right,#67a4ff, #0062e8); /* 标准的语法（必须放在最后） */
+    }
 </style>
