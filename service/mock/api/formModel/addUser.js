@@ -1,14 +1,14 @@
 const wrapper = function (value) {
-	return {
-		success: true,
-		errorMsg: '',
-		value
-	}
+    return {
+        success: true,
+        errorMsg: '',
+        value
+    }
 }
 
 const formModels = {
-	templates: {
-		'Equals': `
+    templates: {
+        'Equals': `
           let ret = false
           switch ($$.type()) {
               case 'number': 
@@ -30,91 +30,104 @@ const formModels = {
           return ret ? $$.pass() : $$.fail(0, '必须相等于')
       `,
 
-		'GreaterThan': `
-          if ($$(0).equals($$(1)) {
+        'GreaterThan': `
+          if ($$.number(0) > $$.number(1)) {
               return $$.pass();
           } else {
-              return $$.fail(0, '必须大于')
+              return $$.fail(0, '必须大于');
           }
       `
-	},
-	formModels: {
-		p1: {
-			form1: {
-				name: {
-					name: '自身年龄',
-					value: '',
-					type: 'string', // number / date / string / address
-					rules: {
-						label: '姓名',
-						type: 'za-input',
-						vRules: 'required|username|usernameLength',
-						placeholder: '请输入姓名',
-						errorMsg: '请输入姓名',
-					},
-				},
-				genderCode: {
-					value: 'M',
-					rules: {
-						label: '性别',
-						type: 'za-sex',
-						vRules: 'required',
-						placeholder: '请选择',
-						errorMsg: '请选择性别',
-					},
-				},
-				birthday: {
-					value: '1994-01-01',
-					rules: {
-						label: '出生日期',
-						type: 'za-date',
-						vRules: 'required',
-						placeholder: '请选择',
-						errorMsg: '请输入出生日期',
-					},
-					validators: [
-						{
-							name: '验证子女年龄',
-							fields: ['p1-form1-text'],
-							baseChecks: ['LessThen']
-						}
-					],
-				},
-			},
-			form2: {
-				relation: {
-					value: '',
-					rules: {
-						label: '是投保人',
-						type: 'za-select',
-						vRules: 'required',
-						placeholder: '请选择',
-						errorMsg: '请选择与投保人的关系',
-						showName: true,
-						options: [[
-							{ name: '本人', value: '00' },
-							{ name: '配偶', value: '01' },
-							{ name: '子女', value: '02' },
-							{ name: '父母', value: '03' },
-							{ name: '其他', value: '06' }
-						]]
-					}
-				},
-				name: {
-					value: '',
-					rules: {
-						label: '姓名',
-						type: 'za-input',
-						vRules: 'required|username|usernameLength',
-						placeholder: '请输入姓名',
-						errorMsg: '请输入姓名',
-						readOnly: false
-					},
-					validators: [
-						{
-							name: '校验关系',
-							fields: ['relation', 'p1-form1-name'],
-							codes: `
+    },
+    formModels: {
+        p1: {
+            form1: {
+                name: {
+                    name: '自身年龄',
+                    value: '',
+                    type: 'string', // number / date / string / address
+                    rules: {
+                        label: '姓名',
+                        type: 'za-input',
+                        vRules: 'required|username|usernameLength',
+                        placeholder: '请输入姓名',
+                        errorMsg: '请输入姓名',
+                    },
+                },
+                genderCode: {
+                    value: 'M',
+                    rules: {
+                        label: '性别',
+                        type: 'za-sex',
+                        vRules: 'required',
+                        placeholder: '请选择',
+                        errorMsg: '请选择性别',
+                    },
+                },
+                birthday: {
+                    value: '1994-01-01',
+                    rules: {
+                        label: '出生日期',
+                        type: 'za-date',
+                        vRules: 'required',
+                        placeholder: '请选择',
+                        errorMsg: '请输入出生日期',
+                    },
+                    validators: [
+                        {
+                            name: '验证子女年龄',
+                            fields: ['p1-form1-text'],
+                            baseChecks: ['LessThen']
+                        }
+                    ],
+                },
+            },
+            form2: {
+                relation: {
+                    value: '',
+                    rules: {
+                        label: '是投保人',
+                        type: 'za-select',
+                        vRules: 'required',
+                        placeholder: '请选择',
+                        errorMsg: '请选择与投保人的关系',
+                        showName: true,
+                        options: [[
+                            { name: '本人', value: '00' },
+                            { name: '配偶', value: '01' },
+                            { name: '子女', value: '02' },
+                            { name: '父母', value: '03' },
+                            { name: '其他', value: '06' }
+                        ]]
+                    }
+                },
+                name: {
+                    value: '',
+                    type: 'string',
+                    rules: {
+                        label: '姓名',
+                        type: 'za-input',
+                        vRules: 'required|username|usernameLength',
+                        placeholder: '请输入姓名',
+                        errorMsg: '请输入姓名',
+                        readOnly: false
+                    },
+                    validators: [
+                        {
+                            name: 'async1',
+                            fields: ['relation'],
+                            template: 'ServerEquals',
+                            server: true
+                        },
+                        {
+                            name: 'async2',
+                            fields: ['genderCode'],
+                            template: 'ServerGreaterThan',
+                            server: true
+                        },
+                        {
+                            name: '校验关系',
+                            fields: ['relation', 'p1-form1-name'],
+                            codes: `
 								if(!$$(1)) {
 									return $$.fail(0,'请选择与被保人关系!!!')
 								}
@@ -124,24 +137,24 @@ const formModels = {
 									return $$.pass()
 								}
 							`
-						},
-					],
-				},
-				genderCode: {
-					value: 'M',
-					rules: {
-						label: '性别',
-						type: 'za-sex',
-						vRules: 'required',
-						placeholder: '请选择',
-						errorMsg: '请输入性别',
-						readOnly: false
-					},
-					validators: [
-						{
-							name: '校验性别',
-							fields: ['p1-form2-genderCode', 'relation'],
-							codes: `
+                        },
+                    ],
+                },
+                genderCode: {
+                    value: 'M',
+                    rules: {
+                        label: '性别',
+                        type: 'za-sex',
+                        vRules: 'required',
+                        placeholder: '请选择',
+                        errorMsg: '请输入性别',
+                        readOnly: false
+                    },
+                    validators: [
+                        {
+                            name: '校验性别',
+                            fields: ['p1-form2-genderCode', 'relation'],
+                            codes: `
 							if($$(2) == '00' && $$(1) != $$(0)) {
 								return $$.fail(0,'选择为本人，性别必须相同!!!')
 							} else if($$(2) == '01' && $$(0) == $$(1)) {
@@ -150,25 +163,25 @@ const formModels = {
 								return $$.pass()
 							}
 						`
-						}
-					]
-				},
-				birthday: {
-					value: '1980-01-01',
-					rules: {
-						label: '出生日期',
-						type: 'za-date',
-						vRules: 'required',
-						placeholder: '请选择',
-						errorMsg: '请输入出生日期',
-						readOnly: false,
-						stime: '1940-01-01',
-						etime: '',
-					},
-					validators: [{
-						name: '校验年龄',
-						fields: ['p1-form1-birthday', 'relation'],
-						codes: `
+                        }
+                    ]
+                },
+                birthday: {
+                    value: '1980-01-01',
+                    rules: {
+                        label: '出生日期',
+                        type: 'za-date',
+                        vRules: 'required',
+                        placeholder: '请选择',
+                        errorMsg: '请输入出生日期',
+                        readOnly: false,
+                        stime: '1940-01-01',
+                        etime: '',
+                    },
+                    validators: [{
+                        name: '校验年龄',
+                        fields: ['p1-form1-birthday', 'relation'],
+                        codes: `
 							if($$(2) == '00' && $$.stamp(0) !== $$.stamp(1)) {
 								return $$.fail(0,'关系为本人，请修改生日')
 							}else if ($$(2) == '02' && $$.stamp(0) <= $$.stamp(1)) {
@@ -179,13 +192,13 @@ const formModels = {
 								return $$.pass()
 							}
 						`
-					}]
-				},
-			}
-		},
-		// p2: {
-		// }
-	}
+                    }]
+                },
+            }
+        },
+        // p2: {
+        // }
+    }
 
 }
 
