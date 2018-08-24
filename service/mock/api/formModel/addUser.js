@@ -549,10 +549,119 @@ const formModels = {
 					}
 					]
 				},
+			},
+			form3: {
+				select: {
+					value: '',
+					rules: {
+						label: '下拉框',
+						type: 'za-select',
+						showName:true,
+						readOnly: false,
+						vRules: 'required',
+						placeholder: '请选择',
+						options: [[
+								{
+									value: "1",
+									name: "option 1"
+								},
+								{
+									value: "2",
+									name: "option 2"
+								},
+							]],
+						errorMsg: '请选择'
+					}
+				},
+				input: {
+					value: '',
+					rules: {
+						label: 'input',
+						type: 'za-input',
+						vRules: 'required',
+						placeholder: '请输入',
+						errorMsg: '请输入'
+					}
+				},
+				button_group: {
+					value: '',
+					rules: {
+						label: 'button_group',
+						type: 'za-button_group',
+						vRules: 'required',
+						options: [{name: '选项1', value:'选项1'},{name: '选项2', value:'选项2'}]
+					}
+				},
+				text : {
+					value: 'this is text',
+					rules: {
+						label: 'text',
+						type: 'za-text'
+					}
+				},
+				address : {
+					value: {
+						"province": "",
+						"provinceDesc": "",
+						"city": "",
+						"cityDesc": "",
+						"district": "",
+						"districtDesc": "",
+						"detail": ""
+					},
+					rules: {
+						label: 'Address',
+						subLabel: 'detail',
+						type: 'za-address',
+						vRules: 'required',
+						showDetail: true,
+						errorMsg: '请输入'
+					}
+				},
+				birthDay : {
+					value: '1986-07-02',
+					rules: {
+						label: 'birthDay',
+						type: 'za-date',
+						vRules: 'required',
+						placeholder: '请选择',
+						errorMsg: '请输入'
+					}
+				},
+				sex : {
+					value: 'M',
+					rules: {
+						label: 'sex',
+						type: 'za-sex',
+						vRules: 'required',
+						placeholder: '请选择',
+						readOnly: false,
+						errorMsg: '请输入'
+					}
+				},
+				Married : {
+					value: 'Y',
+					rules: {
+						label: 'Married',
+						type: 'za-yesno',
+						vRules: 'required',
+						errorMsg: '请输入'
+					}
+				},
+				Reason : {
+					value: '',
+					rules: {
+						label: 'Reason',
+						type: 'za-textarea',
+						vRules: 'required|min:8',
+						placeholder: '请输入',
+						errorMsg: '请输入'
+					}
+				}
 			}
 		},
-		// p2: {
-		// }
+		p2: {
+		}
 	}
 
 }
