@@ -22,7 +22,7 @@ const ROUTEES = [
   demo,
   article,
   form,
-  addUser
+  ...addUser
 ]
 window.gg = gallery
 Vue.use(Router)
