@@ -1,0 +1,13 @@
+/build/
+/config/
+/dist/
+/*.js
+/test/unit/coverage/
+/src/application/
+/src/api/
+/src/assets/
+/src/language/
+/src/utils/
+/src/widget/
+/src/store/modules/
+/service/
