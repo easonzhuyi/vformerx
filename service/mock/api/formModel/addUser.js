@@ -6,7 +6,7 @@ const wrapper = function (value) {
     }
 }
 
-const formModels = {
+const formModels = { 
 	templates: {
 		// 相等
 		'Equals': `
