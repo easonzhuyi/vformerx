@@ -43,6 +43,7 @@
 import { ARTICLELIST } from "@/api";
 import * as types from "@/store/mutation-types";
 import { formUnit, Tab, TabItem, zaTitle } from "vformer";
+import { getConfig } from '../getConfig'
 export default {
   data() {
     return {
@@ -113,7 +114,11 @@ export default {
   },
   computed: {
     formModels() {
-      return this.$store.state.config.formModels[this.pageName];
+      if(this.$store.state.config.formModels) {
+        return this.$store.state.config.formModels[this.pageName] || []
+      } else {
+        return []
+      }
     },
     count() {
       return this.$store.state.count;
@@ -123,7 +128,9 @@ export default {
     }
   },
   created() {
-    this.renderCopyForm();
+    getConfig(window.app).then(() => {
+      this.renderCopyForm();
+    })
   }
 };
 </script>

@@ -1,10 +1,18 @@
-import {ADDUSER} from '@/api'
+import {ADDUSER, GETDEMOCONFIG} from '@/api'
 const getConfig = function (app) {
-  app.axios.post(ADDUSER).then(({data}) => {
+  return app.axios.post(ADDUSER).then(({data}) => {
     app.$store.dispatch('initialize', { 
         config: data.value, 
         vux: app.$vux
     })
   })
 }
-export default getConfig
+const getDemoConfig = function (app) {
+  return app.axios.get(GETDEMOCONFIG).then(({data}) => {
+    app.$store.dispatch('initialize', { 
+        config: data.value, 
+        vux: app.$vux
+    })
+  })
+}
+export {getConfig, getDemoConfig}

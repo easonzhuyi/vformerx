@@ -326,8 +326,7 @@ export function bind(models, data, page) {
         settings.values[fullname({
             page, form: data.name, name: key
         })] = value;
-
-        models[page][data.name][key].value = value
+        models[page][data.name][key]['value'] = value
     }
 }
 
