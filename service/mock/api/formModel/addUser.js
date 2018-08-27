@@ -6,7 +6,7 @@ const wrapper = function (value) {
     }
 }
 
-const formModels = {
+const formModels = { 
 	templates: {
 		// 相等
 		'Equals': `
@@ -463,7 +463,7 @@ const formModels = {
 					validators: [
 						{
 							name: '校验关系',
-							fields: ['relation', 'p1-form1-name'],
+							fields: ['relation', 'p1-form3-name'],
 							codes: `
 								if(!$$(1)) {
 									return $$.fail(0,'请选择与被保人关系!!!')
@@ -477,15 +477,15 @@ const formModels = {
 						},
 						{
 							name: 'name',
-							fields: ['p1-form1-name'],
+							fields: ['p1-form3-name'],
 							template: 'NotNull'
-                        },
-                        {
-                            name: 'async',
-                            fields: ['relation'],
-                            template: 'ServerEquals',
-                            server: true
-                        }
+						},
+						{
+								name: 'async',
+								fields: ['relation'],
+								template: 'ServerEquals',
+								server: true
+						}
 					],
 				},
 				genderCode: {
@@ -501,7 +501,7 @@ const formModels = {
 					validators: [
 						{
 							name: '校验性别',
-							fields: ['p1-form2-genderCode', 'relation'],
+							fields: ['p1-form3-genderCode', 'relation'],
 							codes: `
 							if($$(2) == '00' && $$(1) != $$(0)) {
 								return $$.fail(0,'选择为本人，性别必须相同!!!')
@@ -529,7 +529,7 @@ const formModels = {
 					},
 					validators: [{
 						name: '校验年龄',
-						fields: ['p1-form1-birthday', 'relation'],
+						fields: ['p1-form3-birthday', 'relation'],
 						codes: `
 							if($$(2) == '00' && $$.stamp(0) !== $$.stamp(1)) {
 								return $$.fail(0,'关系为本人，请修改生日')
@@ -541,97 +541,30 @@ const formModels = {
 								return $$.pass()
 							}
 						`
-					},
-					{
-							name: 'birthday',
-							fields: ['p1-form1-birthday'],
-							template: 'Equals'
-					}
+						},
+						{
+								name: 'birthday',
+								fields: ['p1-form3-birthday'],
+								template: 'Equals'
+						}
 					]
 				},
 			},
 			form3: {
-				select: {
+				name: {
 					value: '',
 					rules: {
-						label: '下拉框',
-						type: 'za-select',
-						showName:true,
-						readOnly: false,
-						vRules: 'required',
-						placeholder: '请选择',
-						options: [[
-								{
-									value: "1",
-									name: "option 1"
-								},
-								{
-									value: "2",
-									name: "option 2"
-								},
-							]],
-						errorMsg: '请选择'
-					}
-				},
-				input: {
-					value: '',
-					rules: {
-						label: 'input',
+						label: '姓名',
 						type: 'za-input',
 						vRules: 'required',
 						placeholder: '请输入',
 						errorMsg: '请输入'
 					}
 				},
-				button_group: {
-					value: '',
-					rules: {
-						label: 'button_group',
-						type: 'za-button_group',
-						vRules: 'required',
-						options: [{name: '选项1', value:'选项1'},{name: '选项2', value:'选项2'}]
-					}
-				},
-				text : {
-					value: 'this is text',
-					rules: {
-						label: 'text',
-						type: 'za-text'
-					}
-				},
-				address : {
-					value: {
-						"province": "",
-						"provinceDesc": "",
-						"city": "",
-						"cityDesc": "",
-						"district": "",
-						"districtDesc": "",
-						"detail": ""
-					},
-					rules: {
-						label: 'Address',
-						subLabel: 'detail',
-						type: 'za-address',
-						vRules: 'required',
-						showDetail: true,
-						errorMsg: '请输入'
-					}
-				},
-				birthDay : {
-					value: '1986-07-02',
-					rules: {
-						label: 'birthDay',
-						type: 'za-date',
-						vRules: 'required',
-						placeholder: '请选择',
-						errorMsg: '请输入'
-					}
-				},
 				sex : {
 					value: 'M',
 					rules: {
-						label: 'sex',
+						label: '性别',
 						type: 'za-sex',
 						vRules: 'required',
 						placeholder: '请选择',
@@ -639,25 +572,113 @@ const formModels = {
 						errorMsg: '请输入'
 					}
 				},
-				Married : {
-					value: 'Y',
+				birthDay : {
+					value: '',
 					rules: {
-						label: 'Married',
-						type: 'za-yesno',
+						label: '出生日期',
+						type: 'za-date',
 						vRules: 'required',
+						placeholder: '请选择',
 						errorMsg: '请输入'
 					}
 				},
-				Reason : {
-					value: '',
-					rules: {
-						label: 'Reason',
-						type: 'za-textarea',
-						vRules: 'required|min:8',
-						placeholder: '请输入',
-						errorMsg: '请输入'
-					}
-				}
+				// select: {
+				// 	value: '',
+				// 	rules: {
+				// 		label: '下拉框',
+				// 		type: 'za-select',
+				// 		showName:true,
+				// 		readOnly: false,
+				// 		vRules: 'required',
+				// 		placeholder: '请选择',
+				// 		options: [[
+				// 				{
+				// 					value: "1",
+				// 					name: "option 1"
+				// 				},
+				// 				{
+				// 					value: "2",
+				// 					name: "option 2"
+				// 				},
+				// 			]],
+				// 		errorMsg: '请选择'
+				// 	}
+				// },
+				// input: {
+				// 	value: '',
+				// 	rules: {
+				// 		label: 'input',
+				// 		type: 'za-input',
+				// 		vRules: 'required',
+				// 		placeholder: '请输入',
+				// 		errorMsg: '请输入'
+				// 	}
+				// },
+				// button_group: {
+				// 	value: '',
+				// 	rules: {
+				// 		label: 'button_group',
+				// 		type: 'za-button_group',
+				// 		vRules: 'required',
+				// 		options: [{name: '选项1', value:'选项1'},{name: '选项2', value:'选项2'}]
+				// 	}
+				// },
+				// text : {
+				// 	value: 'this is text',
+				// 	rules: {
+				// 		label: 'text',
+				// 		type: 'za-text'
+				// 	}
+				// },
+				// address : {
+				// 	value: {
+				// 		"province": "",
+				// 		"provinceDesc": "",
+				// 		"city": "",
+				// 		"cityDesc": "",
+				// 		"district": "",
+				// 		"districtDesc": "",
+				// 		"detail": ""
+				// 	},
+				// 	rules: {
+				// 		label: 'Address',
+				// 		subLabel: 'detail',
+				// 		type: 'za-address',
+				// 		vRules: 'required',
+				// 		showDetail: true,
+				// 		errorMsg: '请输入'
+				// 	}
+				// },
+				// birthDay : {
+				// 	value: '1986-07-02',
+				// 	rules: {
+				// 		label: 'birthDay',
+				// 		type: 'za-date',
+				// 		vRules: 'required',
+				// 		placeholder: '请选择',
+				// 		errorMsg: '请输入'
+				// 	}
+				// },
+
+				// Married : {
+				// 	value: 'Y',
+				// 	rules: {
+				// 		label: 'Y/N',
+				// 		type: 'za-yesno',
+				// 		vRules: 'required',
+				// 		errorMsg: '请输入'
+				// 	}
+				// },
+				// Reason : {
+				// 	value: '',
+				// 	rules: {
+				// 		label: 'textarea',
+				// 		type: 'za-textarea',
+				// 		vRules: 'required|min:8',
+				// 		placeholder: '请输入',
+				// 		errorMsg: '请输入'
+				// 	}
+				// }
 			}
 		},
 		p2: {

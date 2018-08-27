@@ -23,7 +23,7 @@ const ROUTEES = [
   demo,
   article,
   form,
-  addUser,
+  ...addUser,
   formDemo
 ]
 window.gg = gallery
