@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form-unit v-for="(formModel, key) in formModels" :key="key" :name="key" :formModels="formModel" @formChange="onChange" @formEvent="onEvent">
+    <form-unit v-for="(v,i) in formModels" :name='i' :formModels="v" :key="i" @formChange="onChange" @formEvent="onEvent">
     </form-unit>
   </div>
 </template>
@@ -42,11 +42,7 @@ export default {
   },
   computed: {
     formModels () {
-      if(this.$store.state.config.formModels) {
-        return this.$store.state.config.formModels[this.pageName] || []
-      } else {
-        return []
-      }
+      return this.$store.getters.formModels[this.pageName]
     }
   },
   created () {

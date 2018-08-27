@@ -30,7 +30,9 @@ const validate = debounce(({
 
 const store = new Vuex.Store({
   state: {
-    config: {},
+    config: {
+      formModels: {},
+    },
   },
 
   mutations: {
@@ -92,6 +94,9 @@ const store = new Vuex.Store({
   },
   modules: {
     formModel,
+  },
+  getters: {
+    formModels: state => state.config.formModels,
   },
 });
 
