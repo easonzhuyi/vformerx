@@ -1,6 +1,12 @@
 # vsiren-cli
 > A Vue.js project Multiple Entry
 
+## 注意！
+- 由于修改涉及到 vformer 组件的代码，为了保证不影响其它项目，现在采用 @wangweiqi/vformer 来代替原有 vformer 包；
+- git pull orgin dev
+- npm install @wangweiqi/vformer --save
+- npm run mdev
+
 ## 目录结构说明
 
 - 路由按目录划分，即每个页面对应一个文件夹，每个文件夹包含 index.js,
