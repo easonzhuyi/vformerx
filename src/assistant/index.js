@@ -346,7 +346,6 @@ export function update(models, page, form) {
 export function bind(models, data, page) {
   Object.keys(data.value).forEach(key => {
     const value = data.value[key];
-
     settings.values[fullname({
       page, form: data.name, name: key,
     })] = value;

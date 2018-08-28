@@ -14,6 +14,7 @@ import demo from '../../../demo'
 import article from './article/router'
 import form from './form/router'
 import addUser from './addUser/router'
+import formDemo from './formDemo/router'
 // 页面模块 end
 
 // 所有页面
@@ -22,7 +23,8 @@ const ROUTEES = [
   demo,
   article,
   form,
-  ...addUser
+  ...addUser,
+  formDemo
 ]
 window.gg = gallery
 Vue.use(Router)
