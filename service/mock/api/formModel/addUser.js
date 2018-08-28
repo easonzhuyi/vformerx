@@ -349,13 +349,13 @@ const formModels = {
 		p1: {
 			form1: {
 				name: {
-					name: '自身年龄',
+					name: '姓名',
 					value: '',
 					type: 'string', // number / date / string / address
 					rules: {
 						label: '姓名',
 						type: 'za-input',
-						vRules: 'required|username|usernameLength',
+						vRules: 'required|cnname',
 						placeholder: '请输入姓名',
 						errorMsg: '请输入姓名',
 					},
@@ -369,23 +369,6 @@ const formModels = {
 						placeholder: '请选择',
 						errorMsg: '请选择性别',
 					},
-				},
-				birthday: {
-					value: '1994-01-01',
-					rules: {
-						label: '出生日期',
-						type: 'za-date',
-						vRules: 'required',
-						placeholder: '请选择',
-						errorMsg: '请输入出生日期',
-					},
-					validators: [
-						{
-							name: '验证子女年龄',
-							fields: ['p1-form1-text'],
-							baseChecks: ['LessThen']
-						}
-					],
 				},
 				cardType: {
 					value: '',
@@ -417,7 +400,14 @@ const formModels = {
 						vRules: 'required|idcard',
 						placeholder: '请输入身份证号码',
 						errorMsg: '请输入身份证号码'
-					}
+          }, 
+          fillers: [{
+            name: '自动填写生日',
+            target: 'birthday',
+            codes: `
+              return $$(0).substr(6, 4) + '-' + $$(0).substr(10, 2) + '-' + $$(0).substr(12, 2);
+            `
+          }],
 				},
 				ppCard: {
 					value: '',
@@ -428,6 +418,18 @@ const formModels = {
 						placeholder: '请输入护照号码',
 						errorMsg: '请输入护照号码'
 					}
+        },
+        birthday: {
+					value: '1994-01-01',
+					rules: {
+						label: '出生日期',
+						type: 'za-date',
+						vRules: 'required',
+						placeholder: '请选择',
+						errorMsg: '请输入出生日期',
+					},
+					validators: [
+          ],
 				},
 			},
 			form2: {
@@ -447,7 +449,27 @@ const formModels = {
 							{ name: '父母', value: '03' },
 							{ name: '其他', value: '06' }
 						]]
-					}
+          },
+          fillers: [{
+            name: '自动填写姓名',
+            fields: ['p1-form1-name'],
+            target: 'name',
+            codes: `
+              console.log($$(1));
+              if ($$(0)==='00') {
+                return $$(1)
+              }
+            `
+          }, {
+            name: '自动填写生日',
+            fields: ['p1-form1-birthday'],
+            target: 'birthday',
+            codes: `
+              if ($$(0)==='00') {
+                return $$(1)
+              }
+            `
+          }]
 				},
 				name: {
 					value: '',
@@ -455,7 +477,7 @@ const formModels = {
 					rules: {
 						label: '姓名',
 						type: 'za-input',
-						vRules: 'required|username|usernameLength',
+						vRules: 'required|cnname',
 						placeholder: '请输入姓名',
 						errorMsg: '姓名',
 						readOnly: false
@@ -463,22 +485,14 @@ const formModels = {
 					validators: [
 						{
 							name: '校验关系',
-							fields: ['relation', 'p1-form3-name'],
+							fields: ['relation', 'p1-form1-name'],
 							codes: `
-								if(!$$(1)) {
-									return $$.fail(0,'请选择与被保人关系!!!')
-								}
-								if($$(1) == '00' && $$(2) != $$(0)) {
+								if($$(1) == '00' && $$(2)!= $$(0)) {
 									return $$.fail(0,'选择本人姓名必须一致')
-								}else {
+								} else {
 									return $$.pass()
 								}
 							`
-						},
-						{
-							name: 'name',
-							fields: ['p1-form3-name'],
-							template: 'NotNull'
 						},
 						{
 								name: 'async',
@@ -486,8 +500,15 @@ const formModels = {
 								template: 'ServerEquals',
 								server: true
 						}
-					],
-				},
+          ],
+          // fillers: [{
+          //   name: 'copy',
+          //   target: 'name2',
+          //   codes: `
+          //     return $$;
+          //   `
+          // }]
+        },
 				genderCode: {
 					value: 'M',
 					rules: {

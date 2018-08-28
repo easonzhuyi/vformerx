@@ -1,14 +1,9 @@
 <template>
   <div>
-    <tab>
-      <tab-item selected @on-item-click="onItemClick('p1')">已发货</tab-item>
-      <tab-item @on-item-click="onItemClick('p2')">未发货</tab-item>
-      <tab-item @on-item-click="onItemClick('p3')">全部订单</tab-item>
-    </tab>
     <za-title className="main-title" name="applicanttitle">
       投保人信息
     </za-title>
-    <form-unit name='form1' :formModels="formModels['form1']" @formChange="onChange" @formEvent="onEvent">
+    <form-unit name='form1' page='p1' :formModels="formModels['form1']" @formChange="onChange" @formEvent="onEvent">
 
     </form-unit>
     <za-title className="main-title" name="applicanttitle">
@@ -17,7 +12,7 @@
     <!-- <form-unit name='form2' :formModels="formModels['form2']" @formChange="onChange" >
 
     </form-unit> -->
-    <form-unit v-for="(v,i) in copyFormModels" :key='i' :name='v' :formModels="formModels[v]" @formChange="onChange" >
+    <form-unit v-for="(v,i) in copyFormModels" page='p1' :key='i' :name='v' :formModels="formModels[v]" @formChange="onChange" >
 
     </form-unit>
     <!-- <p v-for="(v,i) in copyFormModels" :key='i'>
@@ -63,7 +58,8 @@ export default {
         data,
         page: this.pageName,
         field,
-        vux: this.$vux
+        vux: this.$vux,
+        bus: this.$bus,
       });
     },
     insertUser() {
