@@ -29,7 +29,7 @@ baseMixin 干了以下事情：
 </template>
 
 <script>
-import {zaInput,zaSelect,row2Col, baseMixin}from 'vformer'
+import {zaInput,zaSelect,row2Col, baseMixin}from '@wangweiqi/vformer'
 
 export default {
   name: 'test-cust',

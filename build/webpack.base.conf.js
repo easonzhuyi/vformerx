@@ -15,7 +15,7 @@ function resolve (dir) {
 
 // 私有库
 const privateLibraries = [
-  resolve('node_modules/vformer'), // form表单组件
+  resolve('node_modules/@wangweiqi/vformer'), // form表单组件
   resolve('demo') // demo
 ]
 

@@ -7,7 +7,7 @@
 <script>
 import { ARTICLELIST } from "@/api"
 import * as types from "@/store/mutation-types"
-import { formUnit, Tab, TabItem } from "vformer"
+import { formUnit, Tab, TabItem } from "@wangweiqi/vformer"
 import { getDemoConfig } from '../getConfig'
 export default {
   data () {

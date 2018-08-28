@@ -47,7 +47,7 @@
 <script>
 // 导入formUnit
 import Vue from 'vue'
-import { formUnit, Tab, TabItem, TransferDom, actionsheet, AlertPlugin, ConfirmPlugin, ToastPlugin, LoadingPlugin, zaTitle,checkList} from 'vformer'
+import { formUnit, Tab, TabItem, TransferDom, actionsheet, AlertPlugin, ConfirmPlugin, ToastPlugin, LoadingPlugin, zaTitle,checkList} from '@wangweiqi/vformer'
 // 导入配置文件
 import modelData from './formModel'
 // 导入自定义组件

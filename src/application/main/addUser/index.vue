@@ -37,7 +37,7 @@
 <script>
 import { ARTICLELIST } from "@/api";
 import * as types from "@/store/mutation-types";
-import { formUnit, Tab, TabItem, zaTitle } from "vformer";
+import { formUnit, Tab, TabItem, zaTitle } from "@wangweiqi/vformer";
 import { getConfig } from '../getConfig'
 export default {
   data() {
