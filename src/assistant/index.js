@@ -9,6 +9,7 @@ const mockDelay = 800;
 
 const settings = {
   vux: null,
+  bus: null,
   values: {},
   templates: {},
   rules: {},
@@ -151,7 +152,7 @@ function executeRemoteJob(job, callback) {
     // 此处用于调试，当 mockDelay 大于 0 时，会模拟一个请求延迟的效果
     setTimeout(() => {
       axios.post(V_FORMER_SERVER, job).then(response => {
-        callback(response.data);
+        callback(response.data.value);
       }).catch((error) => {
         callback({
           pass: false,
@@ -221,6 +222,25 @@ function addRulesDependencies(item) {
     });
   });
 
+  (item.model.fillers || []).forEach(f => {
+    const fillers = settings.fillers[fname] || [];
+    const fields = (f.fields || []).map(fi => {
+      // 如果元素名称不是全名，根据当前元素的位置，动态补全
+      if (fi.split(separator).length === 1) {
+        return `${item.page}${separator}${item.form}${separator}${fi}`;
+      }
+      return fi;
+    });
+
+    fillers.push({
+      name: f.name,
+      codes: f.codes,
+      fields,
+      target: (f.target.split(separator).length === 1) ? `${item.page}${separator}${item.form}${separator}${f.target}` : f.target,
+    });
+    settings.fillers[fname] = fillers;
+  });
+
   settings.rules[fname] = rules;
 }
 
@@ -277,15 +297,17 @@ function divideRules(...rules) {
  * @param {Object} templates - 对应 state.templates ，保存已经定义好的通用规则
  * @param {Object} vux - Vux 对象，用于在 Ajax 过程中显示蒙板
  */
-export function initialize(models, templates, vux) {
+export function initialize(models, templates, vux, bus) {
   // 重置内部变量
   settings.values = {};
   settings.templates = {};
   settings.rules = {};
   settings.dependencies = {};
+  settings.fillers = {};
 
   // 设置 vux 实例
   settings.vux = vux;
+  settings.bus = bus;
 
   // 根据配置文件，生成通用规则的方法列表
   Object.keys(templates).forEach(key => {
@@ -369,4 +391,45 @@ export function validate(models, field) {
       resolve(ret);
     });
   });
+}
+
+function compute(name, result) {
+  const fillers = settings.fillers[name] || [];
+  fillers.forEach(f => {
+    const params = loadParams(f.fields);
+    const values = [settings.values[name]].concat(params);
+
+    console.log('===============');
+    console.log(params);
+    console.log(values);
+    console.log('===============');
+
+    function $$(column) {
+      return values[column];
+    }
+
+    $$.number = function toNumber(column) {
+      return Number.parseInt($$(column), 10);
+    };
+
+    $$.stamp = function getStamp(column) {
+      return Number.parseInt(Date.parse($$(column)), 10);
+    };
+
+    const callback = new Function('$$', f.codes);
+    const value = callback($$);
+    result.push({
+      name: f.target,
+      value,
+    });
+    settings.values[f.target] = value;
+    compute(f.target, result);
+  });
+}
+
+export function fill(field) {
+  const result = [];
+  const name = fullname(field);
+  compute(name, result);
+  return result;
 }

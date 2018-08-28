@@ -3,7 +3,8 @@ const getConfig = function (app) {
   app.axios.post(ADDUSER).then(({data}) => {
     app.$store.dispatch('initialize', { 
         config: data.value, 
-        vux: app.$vux
+        vux: app.$vux,
+        bus: app.$bus,
     })
   })
 }

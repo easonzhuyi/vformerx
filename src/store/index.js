@@ -7,6 +7,16 @@ import log from './console';
 
 Vue.use(Vuex);
 
+function isValid(errorBag, field) {
+  for (let i = 0; i < errorBag.length; i += 1) {
+    if (errorBag[i].name === field) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 const validate = debounce(({
   state,
   commit,
@@ -14,36 +24,68 @@ const validate = debounce(({
   page,
   field,
 }) => {
+  const fields = typeof field === 'string' ? [field] : field;
   assistant.bind(state.config.formModels, data, page);
-  assistant.validate(state.config.formModels, {
-    page,
-    form: data.name,
-    name: field,
-  }).then(result => {
-    if (result.pass) {
-      commit('update', { data, result });
-    } else {
-      commit('error', result);
+
+  fields.forEach(element => {
+    // 判断当前元素的输入值是否合法
+    if (!isValid(data.errorBag, element)) {
+      return;
     }
+
+    assistant.validate(state.config.formModels, {
+      page,
+      form: data.name,
+      name: element,
+    }).then(result => {
+      if (result.pass) {
+        const fillers = assistant.fill({
+          page,
+          form: data.name,
+          name: element,
+        });
+        commit('fill', fillers);
+      } else {
+        commit('error', {
+          name: `${page}-${data.name}-${element}`,
+          msg: result.reason,
+        });
+      }
+    });
   });
 }, 500);
 
 const store = new Vuex.Store({
   state: {
     config: {},
+    bus: null,
   },
 
   mutations: {
-    initialize(state, config) {
+    initialize(state, { config, bus }) {
+      /* eslint-disable no-param-reassign */
       Object.assign(state.config, config);
+      state.bus = bus;
     },
 
-    update(state, { data, result }) {
-      log(`${result}, ${data}`);
+    fill(state, results) {
+      (results || []).forEach(item => {
+        state.bus.$emit('fill', {
+          name: item.name,
+          value: item.value,
+        });
+      });
     },
+
+    // update(state, { result }) {
+    //   state.$bus.$emit('fill', {
+    //     name: 'p1-form1-name',
+    //     value: '李四',
+    //   });
+    // },
 
     error(state, error) {
-      log(error);
+      state.bus.$emit('error', error);
     },
 
     insert(state, { form, body }) {
@@ -68,12 +110,13 @@ const store = new Vuex.Store({
       assistant.update(state.config.formModels, page, newFormName);
     },
 
-    initialize({ commit }, { config, vux }) {
-      commit('initialize', config);
+    initialize({ commit }, { config, vux, bus }) {
+      commit('initialize', { config, bus });
       assistant.initialize(config.formModels, config.templates, vux);
     },
 
     update({ commit, state }, { data, page, field }) {
+      log(data);
       validate({
         state,
         commit,
