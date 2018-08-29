@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form-unit v-for="(v,i) in formModels" :name='i' :formModels="v" :key="i" @formChange="onChange" @formEvent="onEvent">
+    <form-unit page='p1' v-for="(v,i) in formModels" :name='i' :formModels="v" :key="i" @formChange="onChange" @formEvent="onEvent">
     </form-unit>
   </div>
 </template>
@@ -20,12 +20,12 @@ export default {
   },
   methods: {
     onChange (data, field) {
-      console.log(data, field)
       this.$store.dispatch("update", {
         data,
         page: this.pageName,
         field,
-        vux: this.$vux
+        vux: this.$vux,
+        bus: this.$bus,
       });
     },
     onItemClick () {

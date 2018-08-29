@@ -19,3 +19,6 @@ stats.json
 
 modules/issue/.idea/*
 modules/issue/node_modules/*
+
+vform/
+vformer_bak/
