@@ -222,6 +222,8 @@ function addRulesDependencies(item) {
     });
   });
 
+  settings.rules[fname] = rules;
+
   (item.model.fillers || []).forEach(f => {
     const fillers = settings.fillers[fname] || [];
     const fields = (f.fields || []).map(fi => {
@@ -241,7 +243,23 @@ function addRulesDependencies(item) {
     settings.fillers[fname] = fillers;
   });
 
-  settings.rules[fname] = rules;
+  (item.model.displayers || []).forEach(d => {
+    const displayers = settings.displayers[fname] || [];
+    const fields = (d.fields || []).map(f => {
+      // 如果元素名称不是全名，根据当前元素的位置，动态补全
+      if (f.split(separator).length === 1) {
+        return `${item.page}${separator}${item.form}${separator}${f}`;
+      }
+      return f;
+    });
+
+    displayers.push({
+      name: d.name,
+      codes: d.codes,
+      fields,
+    });
+    settings.displayers[fname] = displayers;
+  });
 }
 
 /**
@@ -304,6 +322,7 @@ export function initialize(models, templates, vux, bus) {
   settings.rules = {};
   settings.dependencies = {};
   settings.fillers = {};
+  settings.displayers = {};
 
   // 设置 vux 实例
   settings.vux = vux;
@@ -392,16 +411,15 @@ export function validate(models, field) {
   });
 }
 
-function compute(name, result) {
-  const fillers = settings.fillers[name] || [];
-  fillers.forEach(f => {
+function compute(name, result, isFill = true) {
+  const elements = isFill ? settings.fillers[name] || [] : settings.displayers[name] || [];
+  elements.forEach(f => {
     const params = loadParams(f.fields);
     const values = [settings.values[name]].concat(params);
-
-    console.log('===============');
-    console.log(params);
-    console.log(values);
-    console.log('===============');
+    // console.log('===============');
+    // console.log(params);
+    // console.log(values);
+    // console.log('===============');
 
     function $$(column) {
       return values[column];
@@ -415,14 +433,25 @@ function compute(name, result) {
       return Number.parseInt(Date.parse($$(column)), 10);
     };
 
+    $$.comp = function changeType(column, comp) {
+      return {
+        name: f.fields[column - 1],
+        value: comp,
+      };
+    };
+
     const callback = new Function('$$', f.codes);
     const value = callback($$);
-    result.push({
-      name: f.target,
-      value,
-    });
-    settings.values[f.target] = value;
-    compute(f.target, result);
+    if (isFill) {
+      result.push({
+        name: f.target,
+        value,
+      });
+      settings.values[f.target] = value;
+      compute(f.target, result);
+    } else {
+      result.push(...value);
+    }
   });
 }
 
@@ -430,5 +459,12 @@ export function fill(field) {
   const result = [];
   const name = fullname(field);
   compute(name, result);
+  return result;
+}
+
+export function display(field) {
+  const result = [];
+  const name = fullname(field);
+  compute(name, result, false);
   return result;
 }

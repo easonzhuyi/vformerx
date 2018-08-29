@@ -349,7 +349,6 @@ const formModels = {
 		p1: {
 			form1: {
 				name: {
-					name: '自身年龄',
 					value: '',
 					type: 'string', // number / date / string / address
 					rules: {
@@ -381,7 +380,7 @@ const formModels = {
 					}
 				},
 				cardType: {
-					value: '02',
+					value: '01',
 					rules: {
 						label: '证件类型',
 						type: 'za-select',
@@ -400,7 +399,25 @@ const formModels = {
 								},
 							]],
 						errorMsg: '请选择证件类型'
-					}
+          },
+          displayers: [{
+            name: '显示身份证/护照输入框',
+            fields: ['idCard', 'ppCard'],
+            codes: `
+              if($$(0) == '01') {
+                return [$$.comp(1, {type: 'za-input'}), $$.comp(2, {type: 'hidden'})]
+              } else if($$(0) == '02') {
+                return [$$.comp(2, {type: 'za-input'}), $$.comp(1, {type: 'hidden'})]
+              }
+            `
+          }],
+          fillers: [{
+            name: '自动填写身份证号',
+            target: 'idCard',
+            codes: `
+              return '110101199003074792';
+            `
+          }]
 				},
 				idCard: {
 					value: '',
@@ -410,13 +427,20 @@ const formModels = {
 						vRules: 'required|idcard',
 						placeholder: '请输入身份证号码',
 						errorMsg: '请输入身份证号码'
-					}
+          },
+          fillers: [{
+            name: '自动填写生日',
+            target: 'birthday',
+            codes: `
+              return $$(0).substr(6, 4) + '-' + $$(0).substr(10, 2) + '-' + $$(0).substr(12, 2);
+            `
+          }]
 				},
 				ppCard: {
 					value: '',
 					rules: {
 						label: '护照',
-						type: 'za-input',
+						type: 'hidden',
 						vRules: 'required|passport',
 						placeholder: '请输入护照号码',
             errorMsg: '请输入护照号码'

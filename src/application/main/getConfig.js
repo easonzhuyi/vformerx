@@ -12,7 +12,8 @@ const getDemoConfig = function (app) {
   return app.axios.get(GETDEMOCONFIG).then(({data}) => {
     app.$store.dispatch('initialize', { 
         config: data.value, 
-        vux: app.$vux
+        vux: app.$vux,
+        bus: app.$bus,
     })
   })
 }

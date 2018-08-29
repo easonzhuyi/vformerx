@@ -54,6 +54,8 @@ export default {
   },
   methods: {
     onChange(data, field) {
+      console.log('onchange data', data)
+      console.log('onchange field', field)
       this.$store.dispatch("update", {
         data,
         page: this.pageName,

@@ -32,13 +32,24 @@ const validate = debounce(({
     if (!isValid(data.errorBag, element)) {
       return;
     }
-
+    // 联动显示隐藏
+    const displayers = assistant.display({
+      page,
+      form: data.name,
+      name: element,
+    });
+    if (displayers && displayers.length > 0) {
+      displayers.forEach(d => {
+        commit('changeFormType', d);
+      });
+    }
     assistant.validate(state.config.formModels, {
       page,
       form: data.name,
       name: element,
     }).then(result => {
       if (result.pass) {
+        // 自动填写
         const fillers = assistant.fill({
           page,
           form: data.name,
@@ -46,9 +57,17 @@ const validate = debounce(({
         });
         commit('fill', fillers);
       } else {
+        // 联动校验错误，调用vformer报错
+        if (result.reason) {
+          commit('error', {
+            name: `${page}-${data.name}-${element}`,
+            msg: result.reason,
+          });
+          return;
+        }
         commit('error', {
           name: `${page}-${data.name}-${element}`,
-          msg: result.reason,
+          msg: '联动错误',
         });
       }
     });
@@ -93,6 +112,14 @@ const store = new Vuex.Store({
     insert(state, { form, body }) {
       Vue.set(state.config.formModels.p1, form, JSON.parse(body));
     },
+
+    changeFormType(state, { name, value }) {
+      const names = name.split('-');
+      const element = state.config.formModels[names[0]][names[1]][names[2]];
+      Object.keys(value).forEach(key => {
+        element.rules[key] = value[key];
+      });
+    },
   },
   actions: {
     insert({ commit, state }, { page, form }) {
@@ -126,13 +153,6 @@ const store = new Vuex.Store({
         page,
         field,
       });
-    },
-
-    changeFormType(state, { p, f, obj }) {
-      log(state.config.formModels[p][f][obj.name].rules);
-
-      const element = state.config.formModels[p][f][obj.name];
-      element.rules.type = obj.val;
     },
   },
   modules: {
